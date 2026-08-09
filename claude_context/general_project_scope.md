@@ -17,7 +17,7 @@ Oral speech — the only document with no institutional reader. Its job is perfo
 
 Name it, don't unpack it, in the lettre de motivation. Two reasons, both structural rather than stylistic. First, page math: Eiffel's own projet professionnel is capped at 1–2 pages and the letter will run similarly short — there's no room to both establish personal fit with Nantes AND walk through impedance control without crowding out the actual job of the letter. Second, and this is the one that matters more. The moment we give the project a full paragraph in the letter, it stops reading as "proof I already build things" and starts reading as "the pitch," which invites exactly the kind of narrow technical cross-examination a school-admissions reader isn't positioned to have — that's the projet académique's job, where the reader is specifically checking training-fit, not judging your engineering.
 
-3. Project full report definition
+# Project full report definition
 
 Got it — this is a real correction, not a tweak, and it changes which parts of the last report should lead and which should recede. Here is the updated professional project scope, treating everything from this thread as your current position and everything before it as background material to be reconciled later.
 
