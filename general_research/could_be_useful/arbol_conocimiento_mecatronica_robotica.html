@@ -1,0 +1,312 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans)}
+.wrap{display:flex;gap:0;min-height:600px;border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);overflow:hidden}
+.tree-col{width:340px;min-width:340px;overflow-y:auto;border-right:0.5px solid var(--color-border-tertiary);padding:12px 0}
+.detail-col{flex:1;padding:20px;overflow-y:auto;min-width:0}
+.node-row{display:flex;align-items:center;gap:0;cursor:pointer;padding:3px 0;user-select:none;transition:background 0.15s}
+.node-row:hover{background:var(--color-background-secondary)}
+.node-row.selected{background:var(--color-background-secondary)}
+.indent{display:inline-block;width:20px;flex-shrink:0}
+.chevron{width:18px;height:18px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;transition:transform 0.18s;font-size:10px;color:var(--color-text-secondary)}
+.chevron.open{transform:rotate(90deg)}
+.chevron.leaf{visibility:hidden}
+.node-label{display:flex;align-items:center;gap:6px;flex:1;min-width:0;padding:1px 8px 1px 0}
+.node-name{font-size:13px;color:var(--color-text-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.badge{font-size:10px;padding:1px 6px;border-radius:999px;white-space:nowrap;flex-shrink:0}
+.d0{background:var(--color-background-success);color:var(--color-text-success)}
+.d1{background:var(--color-background-info);color:var(--color-text-info)}
+.d2{background:#EDE9FE;color:#4C1D95}
+.d2-dark{background:#2e1065;color:#ddd6fe}
+.d3{background:#FEF3C7;color:#92400E}
+.d4{background:#FFE4E6;color:#9F1239}
+.d5{background:var(--color-background-secondary);color:var(--color-text-secondary)}
+.start-badge{font-size:10px;padding:1px 7px;border-radius:999px;background:#0F6E56;color:#E1F5EE;font-weight:500}
+.children-wrap{overflow:hidden;transition:max-height 0.25s ease}
+.detail-empty{color:var(--color-text-secondary);font-size:14px;padding-top:40px;text-align:center}
+.detail-title{font-size:18px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px}
+.detail-sub{font-size:12px;color:var(--color-text-secondary);margin-bottom:16px}
+.dist-pill{display:inline-flex;align-items:center;gap:6px;font-size:12px;padding:3px 10px;border-radius:999px;margin-bottom:16px;font-weight:500}
+.dist-bar-wrap{display:flex;align-items:center;gap:8px;margin-bottom:20px}
+.dist-bar{height:6px;border-radius:3px;background:var(--color-border-tertiary);flex:1;overflow:hidden}
+.dist-fill{height:100%;border-radius:3px}
+.section-label{font-size:11px;font-weight:500;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px;margin-top:20px}
+.detail-desc{font-size:14px;color:var(--color-text-primary);line-height:1.6;margin-bottom:4px}
+.uni-card{border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:10px 12px;margin-bottom:8px}
+.uni-name{font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px}
+.uni-lab{font-size:12px;color:var(--color-text-secondary);margin-bottom:2px}
+.uni-resource{font-size:12px;color:var(--color-text-secondary)}
+.resource-chip{display:inline-block;font-size:11px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:4px;padding:1px 6px;margin:2px 2px 0 0;color:var(--color-text-secondary)}
+.tip-box{border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:10px 14px;background:var(--color-background-secondary);font-size:13px;color:var(--color-text-secondary);line-height:1.6;margin-top:12px}
+.legend{display:flex;flex-wrap:wrap;gap:6px;padding:10px 12px;border-bottom:0.5px solid var(--color-border-tertiary);margin-bottom:4px}
+</style>
+
+<div style="padding:0 0 16px">
+<div class="legend">
+  <span style="font-size:11px;color:var(--color-text-secondary);align-self:center;margin-right:4px">Distancia al brazo:</span>
+  <span class="badge d0">núcleo</span>
+  <span class="badge d1">muy cercano</span>
+  <span class="badge d2">cercano</span>
+  <span class="badge d3">relacionado</span>
+  <span class="badge d4">lejano</span>
+  <span class="badge d5">referencia</span>
+</div>
+
+<div class="wrap">
+  <div class="tree-col" id="tree"></div>
+  <div class="detail-col" id="detail">
+    <div class="detail-empty">
+      <div style="font-size:28px;margin-bottom:10px">🌳</div>
+      Selecciona un nodo del árbol<br>para ver recursos y universidades
+    </div>
+  </div>
+</div>
+</div>
+
+<script>
+const TREE = [
+  { id:'meca', name:'Mecatrónica · sistemas inteligentes', d:0, open:true, isRoot:true, desc:'Campo de confluencia entre ingeniería mecánica, electrónica, informática y control automático. Todo el árbol emana desde aquí.', unis:[], children:[
+
+    { id:'robotica', name:'Robótica', d:0, open:true, desc:'Diseño, modelado, control y percepción de sistemas robóticos físicos. Es el campo central de tu proyecto.', unis:[
+      {name:'Centrale Nantes',lab:'LS2N — equipo RoMaS, ARMEN, ReV',res:['CORO IMARO','UAVs','cable-driven robot CRAFT','arena de vuelo','cobots médicos']},
+      {name:'CentraleSupélec',lab:'L2S — equipo SYCOMORE',res:['control robusto','guía de UAVs','autonomous systems M2']},
+      {name:'Centrale Lyon',lab:'Ampère — MIS dept.',res:['bancos dSPACE','HIL','robótica médica']}
+    ], children:[
+      { id:'brazo', name:'★ Brazo robótico con IA', d:0, isStart:true, desc:'Tu punto de partida. Un brazo robótico inteligente integra mecánica, control, percepción e IA en un sistema único capaz de tomar decisiones autónomas en tiempo real.', tip:'Este nodo es tu "ancla". Cualquier campo que explores puede conectarse de vuelta aquí: visión para el agarre, RL para aprender movimientos, embebidos para ejecutar el control.', unis:[
+        {name:'Centrale Nantes',lab:'LS2N · RoMaS',res:['manipuladores industriales','cable-driven robot','MSc CORO IMARO']},
+        {name:'CentraleSupélec',lab:'L2S · SYCOMORE',res:['M2 MMVAI','control adaptativo brazo','visión artificial']},
+        {name:'Centrale Lyon',lab:'Ampère · MIS',res:['HIL real para brazos','dSPACE','cobots Safran/Valeo']}
+      ]},
+      { id:'modelado', name:'Modelado & dinámica de robots', d:0, desc:'Base matemática: cinemática directa/inversa, Jacobiano, ecuaciones de Lagrange y Newton-Euler. Es el lenguaje fundamental para cualquier proyecto de robótica.', unis:[
+        {name:'Centrale Nantes',lab:'LS2N · ARMEN',res:['ROS / MATLAB-Simulink','simulación multibody']},
+        {name:'CentraleSupélec',lab:'L2S',res:['modelado sistemas complejos','control espacio de estados']},
+        {name:'Centrale Lyon',lab:'Ampère · MIS',res:['AMESim','SimulationX','modelado multifísico']}
+      ], children:[
+        { id:'cinematica', name:'Cinemática directa e inversa', d:0, desc:'Transformaciones homogéneas, ángulos de Euler, DH parameters. Fundamento de todo brazo robótico.', unis:[]},
+        { id:'dinamica', name:'Dinámica de manipuladores', d:0, desc:'Ecuaciones de movimiento, torques, compensación de gravedad e inercia en tiempo real.', unis:[]},
+        { id:'simrobot', name:'Simulación (ROS, MATLAB)', d:0, desc:'ROS/ROS2 como middleware estándar; MATLAB/Simulink para modelado; Gazebo/MuJoCo como simuladores físicos.', unis:[]}
+      ]},
+      { id:'cobots', name:'Robótica colaborativa (cobots)', d:1, desc:'Robots diseñados para trabajar junto a humanos de forma segura. Áreas clave: detección de colisiones, control de impedancia, certificaciones de seguridad (ISO TS 15066).', unis:[
+        {name:'Centrale Nantes',lab:'LS2N · RoMaS',res:['plataforma cobots médicos 2024','HRC research']},
+        {name:'CentraleSupélec',lab:'L2S',res:['control físico HRC','M2 autonomous systems']}
+      ]},
+      { id:'med-robotics', name:'Robótica médica', d:2, desc:'Brazos robóticos para cirugía (Da Vinci-like), rehabilitación o procedimientos de precisión. Requiere dominar HRI + control de fuerza + validación clínica.', unis:[
+        {name:'Centrale Nantes',lab:'LS2N · NExT Talent — PercuCob',res:['macro-mini robot','control admitancia/impedancia','ultrasonido guiado']},
+        {name:'Centrale Lyon',lab:'Ampère · MIS',res:['robótica médica','diagnóstico operacional']}
+      ]}
+    ]},
+
+    { id:'control', name:'Control automático', d:1, open:false, desc:'Disciplina que estudia cómo hacer que un sistema siga una referencia deseada de forma estable y eficiente. Es la columna vertebral técnica de cualquier robot.', unis:[
+      {name:'CentraleSupélec',lab:'L2S — SYCOMORE',res:['MPC robusto','control UAVs','control no-lineal']},
+      {name:'Centrale Nantes',lab:'LS2N — CORO CSYS',res:['MSc Control Systems','control dinámico']},
+      {name:'Centrale Lyon',lab:'Ampère / M2 EEEA',res:['dSPACE HIL','LabVIEW','Automatics track']}
+    ], children:[
+      { id:'pid', name:'Control clásico (PID, lazo cerrado)', d:1, desc:'Controladores proporcional-integral-derivativo. Punto de partida inevitable en cualquier sistema de control.', unis:[]},
+      { id:'mpc', name:'Control predictivo (MPC)', d:1, desc:'Optimiza la acción de control prediciendo el futuro. Muy usado en brazos robóticos para respetar restricciones de velocidad y torque.', unis:[
+        {name:'CentraleSupélec',lab:'L2S · SYCOMORE',res:['MPC robusto no-lineal','evasión de obstáculos']}
+      ]},
+      { id:'robusto', name:'Control robusto (H∞, LMI)', d:1, desc:'Diseño de controladores que funcionan bien incluso ante incertidumbres en el modelo. Clave para brazos que cargan pesos variables.', unis:[
+        {name:'CentraleSupélec',lab:'L2S',res:['H∞ synthesis','LMI design tools']}
+      ]},
+      { id:'hil', name:'Control en tiempo real & HIL', d:1, desc:'Implementación de leyes de control en hardware real. dSPACE permite probar el controlador en tiempo real antes de instalarlo en el robot real.', unis:[
+        {name:'Centrale Lyon',lab:'Ampère · MIS',res:['bancos dSPACE','prototipado rápido Microchip','LabVIEW FPGA']}
+      ]},
+      { id:'adaptativo', name:'Control adaptativo', d:2, desc:'El controlador aprende y ajusta sus parámetros en tiempo real si la planta cambia. Natural evolución para un brazo que maneja cargas distintas.', unis:[
+        {name:'Centrale Nantes',lab:'LS2N',res:['CORO CSYS','control adaptativo robusto']}
+      ]}
+    ]},
+
+    { id:'ia', name:'Inteligencia artificial aplicada', d:1, open:false, desc:'Algoritmos de aprendizaje que permiten a los robots mejorar su comportamiento con experiencia o datos. Complementa al control clásico.', unis:[
+      {name:'CentraleSupélec',lab:'DataIA-Cluster + L2S',res:['DataIA France 2030','800+ investigadores IA','47 laboratorios de IA']},
+      {name:'Centrale Nantes',lab:'LS2N',res:['CORO IMARO + DASSIP','redes neuronales para control']}
+    ], children:[
+      { id:'rl', name:'Aprendizaje por refuerzo (RL)', d:1, desc:'El robot aprende por prueba y error en un entorno simulado (Gym, MuJoCo). Algoritmos: PPO, SAC, TD3. Directamente aplicable a brazos que aprenden a agarrar objetos.', unis:[
+        {name:'CentraleSupélec',lab:'DataIA-Cluster',res:['Deep RL research','INRIA Saclay']},
+        {name:'Centrale Nantes',lab:'LS2N · ARMEN',res:['RL para locomoción robótica']}
+      ]},
+      { id:'vision', name:'Visión artificial', d:1, desc:'Cámaras + algoritmos para que el robot "vea": detección de objetos (YOLO), estimación de pose 3D (6-DoF), segmentación semántica. Permite al brazo saber qué agarrar y cómo.', unis:[
+        {name:'CentraleSupélec',lab:'L2S + M2 MMVAI',res:['machine vision AI','cámaras SAR 3D','tomografía 3D']},
+        {name:'Centrale Nantes',lab:'LS2N · DASSIP',res:['MSc signal & image processing','percepción exteroceptiva']}
+      ]},
+      { id:'nn-control', name:'Redes neuronales para control', d:1, desc:'Uso de redes neuronales como controladores (NN controller) o como modelos del sistema (model learning). Permite control cuando la dinámica es desconocida o muy compleja.', unis:[
+        {name:'CentraleSupélec',lab:'L2S',res:['neural control synthesis','DataIA']},
+        {name:'Centrale Nantes',lab:'LS2N',res:['cómputo dedicado robótica']}
+      ]},
+      { id:'planning', name:'Planificación de movimiento con IA', d:1, desc:'Algoritmos para trazar trayectorias evitando obstáculos: RRT*, PRM, motion planning con RL. Esencial para que el brazo trabaje en entornos dinámicos.', unis:[
+        {name:'Centrale Nantes',lab:'LS2N · ARMEN',res:['RoMaS motion planning','CORO IMARO']}
+      ]}
+    ]},
+
+    { id:'embebidos', name:'Sistemas embebidos', d:1, open:false, desc:'Hardware y firmware que ejecuta el control en tiempo real: microcontroladores, FPGA, drivers de motores, buses industriales. El "músculo" electrónico del robot.', unis:[
+      {name:'Centrale Lyon',lab:'Ampère — MIS + M2 EEEA',res:['dSPACE','LabVIEW','GaN/SiC','Microchip Tech','EtherCAT']},
+      {name:'Centrale Nantes',lab:'LS2N — CORO ERTS',res:['MSc Embedded Real-time Systems','sistemas embebidos de robots']}
+    ], children:[
+      { id:'potencia', name:'Electrónica de potencia & actuadores', d:1, desc:'Drivers para motores DC, BLDC, servos. Convertidores para gestionar la energía. Componentes GaN/SiC para alta eficiencia y frecuencia.', unis:[
+        {name:'Centrale Lyon',lab:'Ampère · EE dept.',res:['GaN/SiC únicos en Francia','sala 1MV','bancos de carga 500A']}
+      ]},
+      { id:'mcu', name:'Microcontroladores & FPGA', d:1, desc:'STM32, ARM Cortex-M para control de tiempo real. FPGA (Xilinx, Intel Altera) para control ultrarrápido de múltiples ejes.', unis:[
+        {name:'Centrale Lyon',lab:'Ampère',res:['prototypage rapide Microchip','Control/Motion Desk']}
+      ]},
+      { id:'buses', name:'Buses industriales (EtherCAT, CANbus)', d:2, desc:'Comunicación entre nodos del robot: EtherCAT para tiempo real duro, CANbus para sensores, ROS2 DDS para arquitecturas distribuidas.', unis:[]},
+      { id:'pcb', name:'Diseño de PCBs & hardware', d:2, desc:'Diseño de tarjetas electrónicas propias para el robot. KiCad, Altium Designer. Permite integrar sensores y actuadores a medida.', unis:[]}
+    ]},
+
+    { id:'percepcion', name:'Percepción & sensores', d:1, open:false, desc:'El "sistema nervioso" del robot: cómo siente su entorno y su propio estado. Fundamento de la autonomía.', unis:[
+      {name:'Centrale Nantes',lab:'LS2N — ReV + IMARO',res:['LiDAR','cámaras estéreo','drones multi-sensor','bio-sensores eléctricos']},
+      {name:'CentraleSupélec',lab:'L2S',res:['anechoic chambers','microwave cameras','sensor fusion']}
+    ], children:[
+      { id:'fusion', name:'Fusión de sensores', d:1, desc:'Combinar IMU, encoders, cámaras y LiDAR para estimar la posición con mayor precisión. Filtro de Kalman Extendido (EKF), Unscented Kalman.', unis:[
+        {name:'Centrale Nantes',lab:'LS2N · IMARO',res:['percepción exteroceptiva','fusión multi-sensor V2X']}
+      ]},
+      { id:'fuerza', name:'Sensores de fuerza & torque', d:1, desc:'ATI, JR3 — miden la fuerza ejercida por el brazo. Habilitan el control de impedancia/admitancia para interacción segura con humanos.', unis:[
+        {name:'Centrale Nantes',lab:'LS2N · RoMaS — PercuCob',res:['control híbrido posición-fuerza','cobots médicos']}
+      ]},
+      { id:'vision3d', name:'Visión 3D (LiDAR, RGBD, SLAM)', d:1, desc:'Intel RealSense, Azure Kinect para profundidad. SLAM (Simultaneous Localization and Mapping) para navegación. Permite al brazo ver objetos en 3D.', unis:[
+        {name:'Centrale Nantes',lab:'LS2N — Autonomous vehicles facility',res:['LiDAR + V2X','SLAM research','drones con cámaras']}
+      ]},
+      { id:'proprio', name:'Sensores propioceptivos', d:0, desc:'Encoders ópticos, resolvers, potenciómetros. Miden el ángulo de cada articulación del brazo. El mínimo indispensable para cualquier robot.', unis:[]}
+    ]},
+
+    { id:'datos', name:'Ciencia de datos & señales', d:2, open:false, desc:'Análisis de datos generados por el robot y sus sensores. Puente entre el brazo físico y aplicaciones de mayor nivel como mantenimiento predictivo o gemelos digitales.', unis:[
+      {name:'CentraleSupélec',lab:'L2S + DataIA-Cluster',res:['data science M2','SAR imaging','47 labs de IA']},
+      {name:'Centrale Nantes',lab:'LS2N — CORO DASSIP',res:['MSc Data Science Signal Image','procesamiento de señales']}
+    ], children:[
+      { id:'señales', name:'Procesamiento de señales (DSP)', d:2, desc:'FFT, filtrado digital, análisis espectral. Permite detectar vibraciones anómalas en el brazo o extraer información de sensores de fuerza.', unis:[
+        {name:'Centrale Nantes',lab:'LS2N · DASSIP',res:['MSc SIP','análisis espectral']},
+        {name:'CentraleSupélec',lab:'L2S',res:['signal processing research']}
+      ]},
+      { id:'predictivo', name:'Mantenimiento predictivo', d:2, desc:'Usar datos históricos del brazo para predecir fallos antes de que ocurran. ML sobre series de tiempo. Muy valorado en la industria automotriz y aeronáutica.', unis:[
+        {name:'Centrale Lyon',lab:'Ampère · socios Safran, Valeo',res:['diagnóstico y seguridad operacional']}
+      ]},
+      { id:'bigdata', name:'Big data industrial (IIoT)', d:3, desc:'El brazo como nodo de una fábrica conectada. Edge computing, gemelos digitales, plataformas como AWS IoT o Azure Digital Twins.', unis:[
+        {name:'CentraleSupélec',lab:'DataIA-Cluster',res:['DataIku partners','industria del futuro']},
+        {name:'Centrale Nantes',lab:'LS2N',res:['industria del futuro (transversal)']}
+      ]}
+    ]},
+
+    { id:'manufactura', name:'Manufactura avanzada', d:2, open:false, desc:'Aplicación de robots y automatización en la producción industrial. El contexto más frecuente de los brazos robóticos en la realidad industrial.', unis:[
+      {name:'Centrale Nantes',lab:'LS2N — RoMaS + ARMEN',res:['CRAFT cable-driven robot','fábrica del futuro']},
+      {name:'Centrale Lyon',lab:'Ampère · socios Siemens, Schneider, Alstom',res:['automatización industrial']}
+    ], children:[
+      { id:'industry40', name:'Industria 4.0 & fábrica del futuro', d:2, desc:'Automatización flexible, cobots en líneas de producción, gemelos digitales de procesos, sistemas cyber-físicos.', unis:[
+        {name:'Centrale Nantes',lab:'LS2N',res:['tema transversal "Industria del Futuro"']},
+        {name:'CentraleSupélec',lab:'Saclay industrial cluster',res:['Airbus, Renault, Dassault partners']}
+      ]},
+      { id:'aditiva', name:'Manufactura aditiva (impresión 3D)', d:3, desc:'El robot CRAFT de Nantes puede usarse para manufactura aditiva de piezas grandes. Conexión con diseño de brazos propios y prototipado rápido.', unis:[
+        {name:'Centrale Nantes',lab:'LS2N · CRAFT robot',res:['manufactura aditiva de gran escala','composites']}
+      ]},
+      { id:'compuestos', name:'Materiales compuestos', d:3, desc:'Fibra de carbono, CFRP. Relevante si el brazo que diseñas necesita ser ligero y rígido a la vez. Plataforma específica en Nantes.', unis:[
+        {name:'Centrale Nantes',lab:'research platforms',res:['composites experimental platform','caracterización termomecánica']}
+      ]}
+    ]},
+
+    { id:'lejano', name:'Campos de referencia (distantes)', d:4, open:false, desc:'Campos dentro del ecosistema de las universidades seleccionadas, pero significativamente alejados del eje brazo robótico + IA.', unis:[], children:[
+      { id:'energia', name:'Energías renovables & marina', d:4, desc:'SEM-REV en Nantes es un sitio offshore europeo único para energía marina. Muy lejos del brazo robótico, aunque comparte sistemas embebidos y control.', unis:[
+        {name:'Centrale Nantes',lab:'SEM-REV offshore site',res:['energía marina','eólica offshore']}
+      ]},
+      { id:'naval', name:'Ingeniería naval / marítima', d:5, desc:'Área muy alejada de tu proyecto. Los robots submarinos y offshore existen, pero requieren un cambio completo de contexto y problemas distintos.', unis:[]},
+      { id:'bio-amb', name:'Bioingeniería ambiental', d:5, desc:'Microbiología ambiental (Ampère), metagenómica de suelos (LS2N). Muy distante de mecatrónica y robótica a menos que sea biorobotica médica.', unis:[
+        {name:'Centrale Lyon',lab:'Ampère · Bioengineerng dept.',res:['microbiología ambiental']}
+      ]}
+    ]}
+  ]}
+];
+
+const distInfo = {
+  0:{label:'núcleo',cls:'d0',fill:'#1D9E75',bar:100},
+  1:{label:'muy cercano',cls:'d1',fill:'#185FA5',bar:75},
+  2:{label:'cercano',cls:'d2',fill:'#534AB7',bar:55},
+  3:{label:'relacionado',cls:'d3',fill:'#BA7517',bar:35},
+  4:{label:'lejano',cls:'d4',fill:'#993556',bar:20},
+  5:{label:'referencia',cls:'d5',fill:'#5F5E5A',bar:10}
+};
+
+let selected = null;
+
+function renderTree(nodes, depth){
+  return nodes.map(n=>{
+    const hasKids = n.children && n.children.length;
+    const id = 'tw_'+n.id;
+    const isOpen = n.open !== false;
+    const di = distInfo[n.d]||distInfo[5];
+    return `
+    <div>
+      <div class="node-row${selected===n.id?' selected':''}" onclick="select('${n.id}');${hasKids?`toggle('${n.id}');`:''}">
+        ${'<span class="indent"></span>'.repeat(depth)}
+        <span class="chevron${hasKids?isOpen?' open':''.' leaf'}" id="ch_${n.id}">${hasKids?'▶':''}</span>
+        <span class="node-label">
+          <span class="node-name" title="${n.name}">${n.name}</span>
+          ${n.isStart?'<span class="start-badge">tu proyecto</span>':''}
+          ${!n.isRoot?`<span class="badge ${di.cls}">${di.label}</span>`:''}
+        </span>
+      </div>
+      ${hasKids?`<div id="${id}" style="max-height:${isOpen?'9999px':'0px'};overflow:hidden;transition:max-height 0.25s ease">${renderTree(n.children,depth+1)}</div>`:''}
+    </div>`;
+  }).join('');
+}
+
+function toggle(id){
+  const el = document.getElementById('tw_'+id);
+  const ch = document.getElementById('ch_'+id);
+  if(!el)return;
+  const open = el.style.maxHeight!=='0px';
+  el.style.maxHeight = open?'0px':'9999px';
+  if(ch) ch.className = 'chevron'+(open?'':' open');
+  // update node.open
+  function mark(ns){ns.forEach(n=>{if(n.id===id)n.open=!open;if(n.children)mark(n.children);})}
+  mark(TREE);
+}
+
+function findNode(id, nodes){
+  for(const n of nodes){
+    if(n.id===id)return n;
+    if(n.children){const f=findNode(id,n.children);if(f)return f;}
+  }
+}
+
+function select(id){
+  selected=id;
+  document.querySelectorAll('.node-row').forEach(r=>r.classList.remove('selected'));
+  event.currentTarget.classList.add('selected');
+  const n = findNode(id, TREE);
+  if(!n)return;
+  const di = distInfo[n.d]||distInfo[5];
+  const barW = di.bar;
+  let uniHTML = '';
+  if(n.unis && n.unis.length){
+    uniHTML = `<div class="section-label">Universidades & recursos</div>`+
+    n.unis.map(u=>`<div class="uni-card">
+      <div class="uni-name">${u.name}</div>
+      <div class="uni-lab">${u.lab}</div>
+      <div style="margin-top:4px">${u.res.map(r=>`<span class="resource-chip">${r}</span>`).join('')}</div>
+    </div>`).join('');
+  } else if(!n.isRoot){
+    uniHTML = `<div class="section-label">Universidades & recursos</div><div style="font-size:13px;color:var(--color-text-secondary)">Consulta el nodo padre para ver los recursos disponibles.</div>`;
+  }
+  const tipHTML = n.tip ? `<div class="tip-box"><strong style="font-size:12px;font-weight:500">💡 Nota estratégica</strong><br>${n.tip}</div>` : '';
+  document.getElementById('detail').innerHTML = `
+    <div>
+      <div class="detail-title">${n.name.replace('★ ','')}</div>
+      <div class="detail-sub">${n.isRoot?'Raíz del árbol':n.isStart?'Tu punto de partida':'Subcampo'}</div>
+      ${!n.isRoot?`<span class="badge ${di.cls} dist-pill">${di.label} al brazo robótico</span>
+      <div class="dist-bar-wrap">
+        <span style="font-size:11px;color:var(--color-text-secondary);white-space:nowrap">lejanía</span>
+        <div class="dist-bar"><div class="dist-fill" style="width:${100-barW}%;background:${di.fill};opacity:0.7"></div></div>
+        <span style="font-size:11px;color:var(--color-text-secondary);white-space:nowrap">cercanía</span>
+        <div class="dist-bar"><div class="dist-fill" style="width:${barW}%;background:${di.fill}"></div></div>
+      </div>`:''}
+      <div class="section-label">Descripción</div>
+      <div class="detail-desc">${n.desc}</div>
+      ${uniHTML}
+      ${tipHTML}
+    </div>`;
+}
+
+document.getElementById('tree').innerHTML = renderTree(TREE, 0);
+// auto-select brazo
+setTimeout(()=>{
+  const el = document.querySelector('[onclick*="brazo"]');
+  if(el){el.click();}
+},80);
+</script>

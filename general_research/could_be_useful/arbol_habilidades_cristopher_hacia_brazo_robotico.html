@@ -1,0 +1,398 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.wrap{display:flex;gap:0;min-height:640px;border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);overflow:hidden}
+.tree-col{width:350px;min-width:350px;overflow-y:auto;border-right:0.5px solid var(--color-border-tertiary)}
+.detail-col{flex:1;padding:20px;overflow-y:auto;min-width:0}
+.node-row{display:flex;align-items:center;gap:0;cursor:pointer;padding:3px 0;user-select:none;transition:background 0.12s}
+.node-row:hover{background:var(--color-background-secondary)}
+.node-row.selected{background:var(--color-background-secondary)}
+.chevron{width:18px;height:18px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;transition:transform 0.18s;font-size:10px;color:var(--color-text-secondary)}
+.chevron.open{transform:rotate(90deg)}
+.chevron.leaf{visibility:hidden}
+.indent{display:inline-block;width:18px;flex-shrink:0}
+.node-label{display:flex;align-items:center;gap:5px;flex:1;min-width:0;padding:1px 8px 1px 0}
+.node-name{font-size:13px;color:var(--color-text-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.badge{font-size:10px;padding:1px 6px;border-radius:999px;white-space:nowrap;flex-shrink:0;font-weight:500}
+.lv0{background:var(--color-background-success);color:var(--color-text-success)}
+.lv1{background:var(--color-background-info);color:var(--color-text-info)}
+.lv2{background:#EDE9FE;color:#4C1D95}
+.lv3{background:#FEF3C7;color:#92400E}
+.lv4{background:#FFE4E6;color:#9F1239}
+.lgap{background:#FEF2F2;color:#991B1B;border:0.5px solid #FECACA}
+.section-head{font-size:11px;font-weight:500;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:0.06em;padding:10px 14px 4px;background:var(--color-background-secondary);border-bottom:0.5px solid var(--color-border-tertiary);border-top:0.5px solid var(--color-border-tertiary)}
+.legend{display:flex;flex-wrap:wrap;gap:6px;padding:10px 12px;border-bottom:0.5px solid var(--color-border-tertiary)}
+.det-title{font-size:17px;font-weight:500;color:var(--color-text-primary);margin-bottom:3px}
+.det-sub{font-size:12px;color:var(--color-text-secondary);margin-bottom:14px}
+.skill-bar-wrap{margin-bottom:18px}
+.skill-bar-row{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.skill-bar-bg{flex:1;height:6px;border-radius:3px;background:var(--color-border-tertiary);overflow:hidden}
+.skill-bar-fill{height:100%;border-radius:3px;transition:width 0.4s}
+.sec-label{font-size:11px;font-weight:500;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:0.05em;margin:16px 0 7px}
+.chip-wrap{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:4px}
+.chip{font-size:11px;padding:2px 8px;border-radius:4px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);color:var(--color-text-secondary)}
+.chip.has{border-color:var(--color-text-success);color:var(--color-text-success);background:var(--color-background-success)}
+.chip.gap{border-color:var(--color-text-danger);color:var(--color-text-danger);background:var(--color-background-danger)}
+.uni-card{border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:9px 11px;margin-bottom:7px}
+.uni-name{font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:3px}
+.uni-lab{font-size:12px;color:var(--color-text-secondary);margin-bottom:3px}
+.resource-chip{display:inline-block;font-size:11px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:4px;padding:1px 6px;margin:1px 2px 0 0;color:var(--color-text-secondary)}
+.route-box{border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);padding:10px 13px;margin-top:10px;background:var(--color-background-secondary)}
+.route-box-title{font-size:12px;font-weight:500;color:var(--color-text-primary);margin-bottom:5px}
+.route-step{font-size:12px;color:var(--color-text-secondary);line-height:1.6;padding-left:12px;position:relative}
+.route-step::before{content:'→';position:absolute;left:0;color:var(--color-text-tertiary)}
+.det-desc{font-size:13px;color:var(--color-text-primary);line-height:1.6;margin-bottom:4px}
+.gap-pill{display:inline-flex;align-items:center;font-size:11px;padding:2px 8px;border-radius:999px;background:#FEF2F2;color:#991B1B;border:0.5px solid #FECACA;margin:2px 2px 0 0}
+</style>
+
+<div style="padding:0 0 16px">
+<div class="legend">
+  <span style="font-size:11px;color:var(--color-text-secondary);align-self:center;margin-right:4px">Nivel actual:</span>
+  <span class="badge lv0">ya lo dominas</span>
+  <span class="badge lv1">fácil extensión</span>
+  <span class="badge lv2">aprendizaje moderado</span>
+  <span class="badge lv3">esfuerzo considerable</span>
+  <span class="badge lgap">gap — necesario aprender</span>
+</div>
+
+<div class="wrap">
+  <div class="tree-col" id="tree"></div>
+  <div class="detail-col" id="detail">
+    <div style="color:var(--color-text-secondary);font-size:14px;padding-top:40px;text-align:center">
+      <div style="font-size:28px;margin-bottom:10px">🎯</div>
+      Selecciona una habilidad del árbol<br>para ver cómo conecta con tu proyecto
+    </div>
+  </div>
+</div>
+</div>
+
+<script>
+const TREE = [
+{id:'root', name:'Tu perfil técnico → brazo robótico con IA', lv:0, open:true, isRoot:true,
+ desc:'Punto de partida: tus habilidades actuales mapeadas hacia el proyecto de brazo robótico inteligente. Cada rama muestra qué ya puedes usar hoy y qué es el siguiente paso natural.',
+ skills:[], enables:[], next:[], unis:[],
+ children:[
+
+{id:'ia', name:'IA & orquestación de agentes', lv:0, open:true,
+ desc:'Tu área más fuerte y la más diferenciadora de tu perfil. Oracle + Scale AI te dieron una base sólida en sistemas multi-agente, RAG, Graph DB y pipelines de IA.',
+ source:'Oracle ML Intern + Scale AI + Hackathons',
+ skills:['LangChain ✓','LangGraph ✓','A2A protocol ✓','AG-UI ✓','RAG ✓','Semantic cache ✓','Graph DB ✓','OCI Gen AI ✓','OpenAI APIs ✓','MCP ✓'],
+ enables:['Arquitectura de decisión inteligente del brazo','Robot con agentes especializados (percepción, planificación, ejecución)','Memoria semántica y contexto persistente (RAG)','Interfaz generativa para operar el robot (AG-UI)','Orquestación de flujos complejos de tareas'],
+ next:['Conectar LangGraph a ROS2 como middleware del robot','Implementar agente de visión (tool call → OpenCV → decisión)','Añadir agente de control (tool call → driver motor → acción)','Graph DB como base de conocimiento de objetos del entorno'],
+ unis:[
+   {name:'CentraleSupélec',lab:'DataIA-Cluster (France 2030) + L2S',res:['47 laboratorios de IA','800+ investigadores','ML para sistemas autónomos','IA para control robusto']},
+   {name:'Centrale Nantes',lab:'LS2N — CORO IMARO + DASSIP',res:['redes neuronales para control','cómputo dedicado robótica','MSc signal & image']}
+ ],
+ gap:'ROS2 como middleware estándar de robótica (lo conectarías a LangGraph). Entrenamiento de modelos en entornos de simulación (Gymnasium, MuJoCo).',
+ children:[
+  {id:'multiagente', name:'Multi-agent AI (LangGraph + A2A)', lv:0,
+   desc:'Ya construyes sistemas multi-agente reales en producción. Directamente transferible a la arquitectura de un robot inteligente con agentes de percepción, planificación y actuación.',
+   source:'Oracle: LangGraph, A2A, AG-UI',
+   skills:['LangGraph ✓','A2A ✓','AG-UI ✓','agent tools ✓'],
+   enables:['Agente perceptor (ve con cámara)','Agente planificador (decide trayectoria)','Agente ejecutor (envía comandos al brazo)'],
+   next:['Integrar ROS2 como "tool" de LangGraph','Añadir state machine formal al grafo'],
+   unis:[{name:'CentraleSupélec',lab:'DataIA',res:['multi-agent control','agent architectures']}],
+   gap:'ROS2 + integración hardware real.',children:[]},
+  {id:'rag', name:'RAG + Graph DB + semantic cache', lv:0,
+   desc:'Tienes experiencia real con RAG, bases de datos vectoriales y Graph DB. Para un robot esto significa: memoria de objetos, historial de tareas, base de conocimiento semántica del entorno.',
+   source:'Oracle: RAG, Graph DB, semantic cache, MCP',
+   skills:['RAG ✓','Graph DB ✓','Semantic cache ✓','MCP ✓'],
+   enables:['Base de conocimiento de objetos del entorno','Recuperación de experiencias previas del robot','Context-aware planning para tareas repetidas'],
+   next:['Conectar Graph DB a mapa del entorno físico','Embedding de estados del robot para búsqueda semántica'],
+   unis:[{name:'CentraleSupélec',lab:'DataIA-Cluster',res:['knowledge graphs','retrieval systems']}],
+   gap:'Modelos de embeddings especializados en datos de sensores.',children:[]},
+  {id:'rl', name:'Aprendizaje por refuerzo (por desarrollar)', lv:3,
+   desc:'No tienes RL formal aún, pero tu base en ML (Scale AI + hackathons) y Python te da una rampa rápida. RL es el puente entre IA de agentes y control de robots que aprenden.',
+   source:'Base: Scale AI ML + Python ML hackathons',
+   skills:['Python ML ✓','model training (Scale AI) ✓','RL → por aprender'],
+   enables:['Brazo que aprende a agarrar sin programar','Optimización automática de trayectorias','Sim-to-real transfer'],
+   next:['Gymnasium (entornos de simulación)','Stable-Baselines3 / RLlib','MuJoCo / Isaac Sim para simular el brazo','Algoritmos: PPO, SAC, TD3'],
+   unis:[{name:'CentraleSupélec',lab:'DataIA + INRIA Saclay',res:['Deep RL research','sim-to-real']},{name:'Centrale Nantes',lab:'LS2N · ARMEN',res:['RL locomotion robots']}],
+   gap:'Frameworks RL (Gymnasium, SB3). Simuladores físicos (MuJoCo, Isaac Sim).',children:[]}
+ ]},
+
+{id:'vision', name:'Visión artificial', lv:0, open:false,
+ desc:'Ya tienes experiencia real: OpenCV en FRC (detección + control autónomo), haar cascade, NN para reconocimiento de imágenes en Scale AI. Esta es tu segunda fortaleza más aplicable.',
+ source:'FIRST FRC Team + Scale AI + hackathons',
+ skills:['OpenCV ✓','haar cascade ✓','redes NN para imagen ✓','Python vision ✓'],
+ enables:['Detección de objetos a agarrar','Estimación de posición del objeto (2D hoy, 3D con RGBD)','Control visual del brazo (visual servoing)','Pick & place inteligente'],
+ next:['YOLOv8 / YOLOv11 para detección rápida','Estimación de pose 6-DoF (MediaPipe, FoundationPose)','Visión 3D con Intel RealSense (RGBD)','Integrar visión como tool del agente LangGraph'],
+ unis:[
+   {name:'CentraleSupélec',lab:'L2S + M2 MMVAI',res:['machine vision AI','tomografía 3D','MSc vision & AI']},
+   {name:'Centrale Nantes',lab:'LS2N · DASSIP + IMARO',res:['MSc Signal & Image Processing','percepción exteroceptiva','cámaras estéreo']}
+ ],
+ gap:'Visión 3D con RGBD/LiDAR (Intel RealSense, Azure Kinect). Estimación de pose 6-DoF. SLAM para mapeo.',
+ children:[
+  {id:'opencv', name:'OpenCV & detección de objetos', lv:0,
+   desc:'Ya usas OpenCV en producción (FRC: control autónomo del robot, aiming y recolección de piezas). Listo para transferir al brazo.',
+   source:'FIRST FRC — 2 modelos de detección en tiempo real',
+   skills:['OpenCV ✓','haar cascade ✓','detección en tiempo real ✓'],
+   enables:['Detección de objetos a agarrar','Tracking visual del brazo'],
+   next:['YOLOv8 para detección más robusta','Segmentación de instancias (SAM)'],
+   unis:[{name:'Centrale Nantes',lab:'LS2N',res:['computer vision research','CORO IMARO']}],
+   gap:'YOLOv8/v11, SAM, estimación de pose.',children:[]},
+  {id:'pose', name:'Estimación de pose 3D (por desarrollar)', lv:2,
+   desc:'El paso natural desde tu OpenCV: detectar la posición y orientación 3D de un objeto para que el brazo sepa exactamente cómo aproximarse a él.',
+   source:'Extensión natural de OpenCV ya dominado',
+   skills:['OpenCV ✓','NumPy ✓','pose estimation → por aprender'],
+   enables:['Pick & place preciso','Agarre en cualquier orientación','Integración con cinemática inversa'],
+   next:['MediaPipe (pose fácil)','FoundationPose / SAM6D','Intel RealSense D435 (RGBD)','Calibración cámara-robot (eye-in-hand)'],
+   unis:[{name:'CentraleSupélec',lab:'L2S · MMVAI',res:['6-DoF pose estimation','machine vision AI']}],
+   gap:'Cámara RGBD. Calibración mano-ojo. Transformadas de coordenadas 3D.',children:[]},
+  {id:'slam', name:'SLAM (cartografía + localización)', lv:3,
+   desc:'Permite al robot construir un mapa del entorno y localizarse en él. Más avanzado, pero la base OpenCV ya es un primer paso.',
+   source:'Fundamento: OpenCV, Python',
+   skills:['OpenCV ✓','SLAM → por aprender'],
+   enables:['Robot que conoce su entorno','Navegación autónoma en espacios','Replanificación dinámica'],
+   next:['ORB-SLAM3 (Python bindings)','ROS2 Nav2 stack','LiDAR + IMU fusion'],
+   unis:[{name:'Centrale Nantes',lab:'LS2N · Autonomous vehicles facility',res:['SLAM research','LiDAR + V2X','drones con cámaras 3D']}],
+   gap:'ROS2 Nav2. LiDAR. IMU + fusión de sensores.',children:[]}
+ ]},
+
+{id:'cpp-embedded', name:'C++ & sistemas embebidos', lv:0, open:false,
+ desc:'C++ proficient + FRC (control de 2 robots de competencia) + FLOW (ESP32, PCB, C++ dinámico). Tienes la base real de programación para hardware.',
+ source:'FIRST FRC + FLOW project + ICPC',
+ skills:['C++ avanzado ✓','Arduino ✓','Raspberry Pi ✓','ESP32 ✓','PCB design ✓','control algorithms FRC ✓'],
+ enables:['Firmware del controlador del brazo','Control de servomotores / BLDC','Lectura de encoders en tiempo real','Protocolo de comunicación entre módulos'],
+ next:['ROS2 en C++ (middleware estándar de robótica)','Librería de cinemática directa/inversa en C++','Control PID formal de articulaciones','Driver de motores con FOC (Field Oriented Control)'],
+ unis:[
+   {name:'Centrale Lyon',lab:'Ampère · MIS + M2 EEEA',res:['dSPACE HIL','prototipado rápido Microchip','LabVIEW FPGA','EtherCAT']},
+   {name:'Centrale Nantes',lab:'LS2N — CORO ERTS',res:['MSc Embedded Real-time Systems','control embebido robótica']}
+ ],
+ gap:'ROS2 (fundamental para robótica moderna). Control formal (PID, MPC). Drivers de motores BLDC con FOC. FPGA para control ultrarrápido.',
+ children:[
+  {id:'ros2', name:'ROS2 — middleware de robótica (gap clave)', lv:'gap',
+   desc:'El estándar industrial de robótica. Tu base C++ + Python te da una rampa de aprendizaje excelente. Es el eslabón que conecta tu IA (LangGraph) con el hardware físico del brazo.',
+   source:'Gap: base en C++ y Python ya lista',
+   skills:['C++ ✓','Python ✓','ROS2 → gap clave a cubrir'],
+   enables:['Middleware entre agentes IA y actuadores','Topics/Services/Actions para cada módulo del brazo','Simulación con Gazebo/MuJoCo antes del hardware real'],
+   next:['ROS2 Humble (instalación + tutoriales oficiales)','Primer nodo: publicar estado de encoders','Segundo nodo: suscribir comandos desde Python (LangGraph)','Gazebo para simular brazo antes de hardware'],
+   unis:[{name:'Centrale Nantes',lab:'LS2N · RoMaS',res:['ROS2 en robótica de manufactura','simulación Gazebo']},{name:'Centrale Lyon',lab:'Ampère',res:['EtherCAT + ROS2 integration']}],
+   gap:'Este es el GAP #1 a cubrir. Sin ROS2, el brazo no tiene arquitectura estándar.',children:[]},
+  {id:'control-pid', name:'Control formal (PID, cinemática) — gap', lv:'gap',
+   desc:'Tienes algoritmos de control de FRC pero sin la teoría formal. Cinemática (cómo mover cada articulación) y PID son la base matemática del brazo.',
+   source:'Gap: base en C++ + álgebra (UASLP)',
+   skills:['C++ ✓','álgebra lineal (UASLP) ✓','PID formal → gap'],
+   enables:['Brazo que llega exactamente donde debe','Control de velocidad y torque estable','Base para MPC y control avanzado'],
+   next:['Parámetros DH + cinemática inversa en Python/C++','PID tuning con Ziegler-Nichols','Librería: Robotics Toolbox Python (Peter Corke)','Simulación: MATLAB/Simulink o CoppeliaSim'],
+   unis:[{name:'Centrale Nantes',lab:'LS2N · CORO CSYS',res:['MSc Control Systems','control dinámico']},{name:'CentraleSupélec',lab:'L2S · SYCOMORE',res:['MPC robusto','control no-lineal']}],
+   gap:'Teoría de control formal. Parámetros DH. Jacobiano. Sin esto, el brazo no es preciso.',children:[]}
+ ]},
+
+{id:'cad-fab', name:'Diseño mecánico & manufactura aditiva', lv:0, open:false,
+ desc:'Fuerte y muy concreto. Fusion360 proficient, SolidWorks familiar, 3D printing end-to-end (LEAD 3D: diseño → selección filamento → impresión Bambu Lab → entrega), y escaneado 3D con Raptor.',
+ source:'LEAD 3D + FLOW project + FRC',
+ skills:['Fusion360 ✓','SolidWorks (familiar) ✓','3D printing Bambu Lab ✓','selección de filamentos ✓','escáner 3D Raptor IR ✓','point cloud optimization ✓','PCB design ✓'],
+ enables:['Diseñar y fabricar el brazo físico completo','Prototipado rápido de eslabones y gripper','Reverse engineering de piezas (escaneo 3D → impresión)','Iteración rápida de diseño mecánico'],
+ next:['FEM / análisis estructural en Fusion360 (ya tienes la herramienta)','Diseño de transmisiones (engranajes, poleas, correas)','Selección formal de actuadores (motores según torque/masa)','Diseño de gripper (agarre) adaptado a objetos del entorno'],
+ unis:[
+   {name:'Centrale Nantes',lab:'Platforms — composites, CRAFT robot',res:['manufactura aditiva gran escala','cable-driven robot','materiales compuestos']},
+   {name:'Centrale Lyon',lab:'Ampère + Safran partnership',res:['diseño de sistemas mecatrónicos','fabricación en contexto aeronáutico']}
+ ],
+ gap:'Análisis FEM dinámico. Selección formal de motores y actuadores. Diseño de transmisiones.',
+ children:[
+  {id:'scan3d', name:'Escaneado 3D & reverse engineering', lv:0,
+   desc:'Experiencia real con escáner Raptor (luz IR + azul, marcadores reflectantes, optimización point cloud). Directamente aplicable a reconstruir piezas existentes o crear modelos del entorno.',
+   source:'LEAD 3D: escáner Raptor, procesamiento de nube de puntos',
+   skills:['Escáner Raptor IR/azul ✓','marcadores reflectantes ✓','optimización modelo ✓','Fusion360 ✓'],
+   enables:['Escanear objetos del entorno para pick & place','Reconstruir piezas mecánicas existentes','Validar tolerancias del brazo impreso'],
+   next:['Integrar point cloud con ROS2 (sensor_msgs/PointCloud2)','Open3D para procesamiento en Python','Detección de objetos en point cloud (PointNet++)'],
+   unis:[{name:'Centrale Nantes',lab:'LS2N · Autonomous vehicles',res:['LiDAR point cloud','SLAM 3D','procesamiento nube de puntos']}],
+   gap:'Procesamiento de point cloud con Open3D/PCL. Integración con ROS2.',children:[]},
+  {id:'mec-design', name:'Diseño mecánico del brazo (Fusion360)', lv:0,
+   desc:'Ya tienes Fusion360 a nivel profesional (LEAD 3D + FLOW). Puedes diseñar el brazo físico, el gripper, y las transmisiones desde hoy.',
+   source:'LEAD 3D + FLOW (C++, SolidWorks, Fusion360, 3D printing)',
+   skills:['Fusion360 ✓','SolidWorks ✓','3D printing ✓','PCB en mismo workspace ✓'],
+   enables:['Eslabones del brazo listos para imprimir','Gripper mecánico o adaptable','Integración mecánica-electrónica en Fusion360'],
+   next:['Análisis FEM en Fusion360 (Simulation workspace)','Cálculo de torques para selección de motores','Diseño de gripper suave (soft robotics)'],
+   unis:[{name:'Centrale Nantes',lab:'research platforms',res:['composites','CRAFT prototyping']}],
+   gap:'Análisis FEM dinámico. Selección de motores por torque-velocidad.',children:[]}
+ ]},
+
+{id:'software', name:'Software, APIs & cloud', lv:0, open:false,
+ desc:'Python proficient + FastAPI + Docker + VMs + deploy (Oracle). También React + HTML/CSS + Flutter. Puedes construir la capa de software del robot hoy mismo.',
+ source:'Oracle (Docker, VMs, deploy, pipelines) + VR Intern (React) + hackathons',
+ skills:['Python ✓','FastAPI ✓','Docker ✓','VMs / cloud ✓','React ✓','GitHub ✓','LangChain APIs ✓'],
+ enables:['API REST para recibir comandos del brazo vía red','Dashboard web de monitoreo del robot','Containerización de la IA del robot en Docker','Deploy de agentes en la nube','CI/CD para el software del robot'],
+ next:['WebSocket para control en tiempo real (baja latencia vs REST)','ROS2 + Docker (ros:humble imagen base)','rosbridge_suite para exponer ROS2 en WebSocket','React dashboard con visualización del estado del brazo'],
+ unis:[
+   {name:'CentraleSupélec',lab:'DataIA + Saclay industrial cluster',res:['cloud robotics','digital twins','Dassault Systèmes partner']},
+   {name:'Centrale Nantes',lab:'LS2N · transversal themes',res:['Industry 4.0','cloud-connected systems']}
+ ],
+ gap:'WebSocket en tiempo real para control (latencia < 10ms). rosbridge para ROS2 sobre web.',
+ children:[
+  {id:'docker-deploy', name:'Docker & cloud deploy', lv:0,
+   desc:'Experiencia real en Oracle: Docker, VMs, pipelines, exposición en web. Perfectamente transferible a containerizar el software del robot.',
+   source:'Oracle: Docker, VMs, cloud pipelines',
+   skills:['Docker ✓','VMs ✓','CI/CD pipelines ✓','cloud APIs ✓'],
+   enables:['IA del robot en contenedor reproducible','Deploy del agente en servidor remoto','API del robot accesible desde internet'],
+   next:['ros:humble imagen Docker','Kubernetes para orquestar múltiples agentes','GitHub Actions para CI del robot'],
+   unis:[{name:'CentraleSupélec',lab:'Saclay',res:['cloud robotics research']}],
+   gap:'Kubernetes (para escalar). GitHub Actions + ROS2.',children:[]},
+  {id:'dashboard', name:'Dashboard web del robot (React)', lv:1,
+   desc:'Ya haces React. Un dashboard de monitoreo del brazo es una extensión directa: posición de articulaciones, logs del agente, video en vivo.',
+   source:'VR Intern (React + HTML) + hackathons',
+   skills:['React ✓','HTML/CSS ✓','JS ✓'],
+   enables:['Interfaz de operador para el robot','Visualización en tiempo real del estado','Control por botones desde la web'],
+   next:['WebSocket para datos en tiempo real','Three.js para visualización 3D del brazo','rosbridge_suite para conectar React con ROS2'],
+   unis:[],
+   gap:'WebSocket + rosbridge. Three.js para URDF visualization.',children:[]}
+ ]},
+
+{id:'algoritmos', name:'Algoritmos & optimización', lv:0, open:false,
+ desc:'ICPC tercer lugar estatal en C++ + hackathons con ML de múltiples parámetros. Tienes mentalidad de resolución de problemas algorítmicos que es directamente útil en motion planning.',
+ source:'ICPC 2024 + hackathons + ROOT math group',
+ skills:['C++ algorithms ✓','data structures ✓','problem solving ✓','ML multi-param ✓'],
+ enables:['Motion planning eficiente (A*, Dijkstra ya los conoces)','Optimización de trayectorias','Algoritmos de control en tiempo real','Implementación eficiente de cinemática inversa'],
+ next:['RRT* / PRM para motion planning de robots','Optimización numérica (scipy.optimize)','Programación de grafos para planificación de tareas','OMPL (Open Motion Planning Library)'],
+ unis:[
+   {name:'Centrale Nantes',lab:'LS2N · ARMEN + OGRE',res:['motion planning robotics','guaranteed nonlinear optimization']},
+   {name:'CentraleSupélec',lab:'L2S · SYCOMORE',res:['optimization under constraints','predictive control']}
+ ],
+ gap:'RRT*, OMPL. Optimización diferenciable. IK solvers numéricos (IKFast, KDL).',
+ children:[
+  {id:'motion-plan', name:'Motion planning (por desarrollar)', lv:2,
+   desc:'Tus algoritmos de grafos de ICPC son la base. RRT* y A* para planificación de movimiento en espacio de configuraciones son el siguiente paso natural.',
+   source:'Base: ICPC C++ (grafos, búsqueda), Python ML',
+   skills:['A* / grafos ✓ (ICPC)','BFS/DFS ✓','motion planning formal → por aprender'],
+   enables:['Brazo que evita obstáculos','Planificación de trayectorias seguras','Integración con agente planificador'],
+   next:['OMPL Python bindings','MoveIt2 (motion planning sobre ROS2)','Configuración de espacio de trabajo y joint limits'],
+   unis:[{name:'Centrale Nantes',lab:'LS2N · RoMaS + ARMEN',res:['MoveIt2 research','motion planning industrial']}],
+   gap:'OMPL. MoveIt2 + ROS2. Configuración URDF del brazo.',children:[]}
+ ]},
+
+{id:'gaps', name:'⚠ Gaps críticos del proyecto', lv:'gap', open:false,
+ desc:'Habilidades que el proyecto requiere pero que aún no tienes. Son los campos donde las universidades francesas pueden aportar más: formación formal, laboratorios especializados y mentores.',
+ source:'Análisis de requisitos del brazo robótico con IA',
+ skills:[],
+ enables:[],
+ next:[],
+ unis:[],
+ gap:'',
+ children:[
+  {id:'gap-ros2', name:'ROS2 — middleware estándar (GAP #1)', lv:'gap',
+   desc:'El ecosistema de robótica moderna. Sin ROS2, el brazo no tiene arquitectura estándar. Tu C++ y Python hacen el aprendizaje rápido.',
+   source:'Necesario: conectar IA, sensores y actuadores',
+   skills:['C++ ✓','Python ✓','ROS2 → aprender urgente'],
+   enables:['Arquitectura estándar del robot','Simulación en Gazebo','Compatibilidad con MoveIt2, Nav2'],
+   next:['Tutorial oficial ROS2 Humble','Implementar nodo sencillo de encoder','Integrar con Docker container'],
+   unis:[{name:'Centrale Nantes',lab:'LS2N · CORO',res:['ROS2 robótica','simulación Gazebo']},{name:'CentraleSupélec',lab:'L2S',res:['ROS2 autonomous systems']}],
+   gap:'GAP #1 a cubrir antes de la beca.',children:[]},
+  {id:'gap-control', name:'Control formal (PID, cinemática, MPC) (GAP #2)', lv:'gap',
+   desc:'Haces control empírico (FRC) pero sin la teoría matemática formal. Las universidades francesas son excepcionales en esto.',
+   source:'Necesario: para que el brazo sea preciso y estable',
+   skills:['control empírico FRC ✓','control formal → aprender'],
+   enables:['Brazo preciso (±1mm)','Control estable ante perturbaciones','Base para MPC y H∞'],
+   next:['Robotics Toolbox Python (Peter Corke — free)','Control automático: Ogata o Nise','MATLAB/Simulink (disponible en UASLP)','Simulación de lazo cerrado'],
+   unis:[{name:'CentraleSupélec',lab:'L2S · SYCOMORE',res:['MPC robusto','control H∞']},{name:'Centrale Lyon',lab:'Ampère · M2 EEEA',res:['dSPACE HIL','control en tiempo real']}],
+   gap:'GAP #2: matemáticas de control. Las escuelas francesas lo dan de forma intensiva.',children:[]},
+  {id:'gap-potencia', name:'Electrónica de potencia & drivers motores (GAP #3)', lv:'gap',
+   desc:'PCB design tienes (FLOW), pero drivers de motores DC/BLDC, FOC, y selección de actuadores son más especializados.',
+   source:'Tienes: PCB design, ESP32. Falta: potencia para brazos',
+   skills:['PCB design ✓','ESP32 ✓','motor drivers → gap'],
+   enables:['Selección del motor correcto para cada articulación','Control de par y velocidad preciso','Electrónica robusta para entorno industrial'],
+   next:['Estudio de motores DC, BLDC, servos','ODrive (driver BLDC open-source)','Cálculo de torques para el brazo diseñado','Simulación en LTspice'],
+   unis:[{name:'Centrale Lyon',lab:'Ampère — GaN/SiC único en Francia',res:['drivers actuadores','electrónica de potencia','dSPACE']},{name:'Centrale Nantes',lab:'LS2N',res:['eco-design robots','embedded systems']}],
+   gap:'GAP #3: drivers motores, FOC, selección de actuadores.',children:[]},
+  {id:'gap-sensores', name:'Fusión de sensores & Kalman (GAP #4)', lv:'gap',
+   desc:'Tienes escáner 3D (Raptor) y OpenCV, pero filtro de Kalman y fusión formal de sensores (IMU + encoders + cámara) son un gap.',
+   source:'Tienes: escáner Raptor, OpenCV. Falta: fusión formal',
+   skills:['OpenCV ✓','escáner 3D ✓','Kalman → gap','sensor fusion → gap'],
+   enables:['Estimación precisa del estado del brazo','Compensación de ruido en encoders','Fusión cámara + encoders para pose del efector final'],
+   next:['Filtro de Kalman Extendido en Python (filterpy)','Fusión IMU + encoder básica','ROS2 robot_localization package'],
+   unis:[{name:'Centrale Nantes',lab:'LS2N · IMARO',res:['fusión multi-sensor','Kalman research']},{name:'CentraleSupélec',lab:'L2S',res:['sensor fusion','estimation theory']}],
+   gap:'GAP #4: Kalman, fusión IMU+encoders.',children:[]}
+ ]}
+
+]}];
+
+const lvInfo = {
+  0:{label:'ya lo dominas',fill:'#0F6E56',bg:'#E1F5EE',text:'#0F6E56',bar:100},
+  1:{label:'fácil extensión',fill:'#185FA5',bg:'#E6F1FB',text:'#185FA5',bar:78},
+  2:{label:'aprendizaje moderado',fill:'#534AB7',bg:'#EDE9FE',text:'#534AB7',bar:55},
+  3:{label:'esfuerzo considerable',fill:'#BA7517',bg:'#FEF3C7',text:'#92400E',bar:35},
+  4:{label:'gap importante',fill:'#993556',bg:'#FFE4E6',text:'#9F1239',bar:15},
+  gap:{label:'gap — necesario',fill:'#991B1B',bg:'#FEF2F2',text:'#991B1B',bar:5}
+};
+
+let selected = null;
+
+function getBadgeCls(lv){
+  if(lv===0)return 'lv0';
+  if(lv===1)return 'lv1';
+  if(lv===2)return 'lv2';
+  if(lv===3)return 'lv3';
+  if(lv===4)return 'lv4';
+  return 'lgap';
+}
+
+function renderTree(nodes, depth){
+  return nodes.map(n=>{
+    const hasKids = n.children && n.children.length;
+    const id = 'tw_'+n.id;
+    const isOpen = n.open !== false;
+    const li = lvInfo[n.lv]||lvInfo[0];
+    return `<div>
+      <div class="node-row${selected===n.id?' selected':''}" onclick="sel('${n.id}');${hasKids?`tog('${n.id}');`:''}">
+        ${'<span class="indent"></span>'.repeat(depth)}
+        <span class="chevron${hasKids?(isOpen?' open':''):' leaf'}" id="ch_${n.id}">${hasKids?'▶':''}</span>
+        <span class="node-label">
+          <span class="node-name" title="${n.name}">${n.name}</span>
+          ${!n.isRoot?`<span class="badge ${getBadgeCls(n.lv)}">${li.label}</span>`:''}
+        </span>
+      </div>
+      ${hasKids?`<div id="${id}" style="max-height:${isOpen?'9999px':'0px'};overflow:hidden;transition:max-height 0.25s ease">${renderTree(n.children,depth+1)}</div>`:''}
+    </div>`;
+  }).join('');
+}
+
+function tog(id){
+  const el=document.getElementById('tw_'+id);
+  const ch=document.getElementById('ch_'+id);
+  if(!el)return;
+  const open=el.style.maxHeight!=='0px';
+  el.style.maxHeight=open?'0px':'9999px';
+  if(ch)ch.className='chevron'+(open?'':' open');
+  function mark(ns){ns.forEach(n=>{if(n.id===id)n.open=!open;if(n.children)mark(n.children);})}
+  mark(TREE);
+}
+function findNode(id,nodes){
+  for(const n of nodes){if(n.id===id)return n;if(n.children){const f=findNode(id,n.children);if(f)return f;}}
+}
+function sel(id){
+  selected=id;
+  document.querySelectorAll('.node-row').forEach(r=>r.classList.remove('selected'));
+  event.currentTarget.classList.add('selected');
+  const n=findNode(id,TREE);
+  if(!n)return;
+  const li=lvInfo[n.lv]||lvInfo[0];
+  const skillsHtml = n.skills&&n.skills.length?`<div class="sec-label">Habilidades que ya tienes aquí</div>
+    <div class="chip-wrap">${n.skills.map(s=>`<span class="chip${s.includes('✓')?' has':''}">${s.replace(' ✓','')}</span>`).join('')}</div>`:'';
+  const enablesHtml = n.enables&&n.enables.length?`<div class="sec-label">Qué habilita para tu proyecto</div>
+    <ul style="padding-left:0;margin:0">${n.enables.map(e=>`<div class="route-step" style="font-size:13px;margin-bottom:4px;padding-left:14px">${e}</div>`).join('')}</ul>`:'';
+  const nextHtml = n.next&&n.next.length?`<div class="sec-label">Siguientes pasos concretos</div>
+    <div class="route-box">${n.next.map(s=>`<div class="route-step">${s}</div>`).join('')}</div>`:'';
+  const gapHtml = n.gap?`<div class="sec-label">Gap a cubrir</div>
+    <div style="font-size:13px;color:var(--color-text-secondary);background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:9px 12px;border:0.5px solid var(--color-border-tertiary)">${n.gap}</div>`:'';
+  const uniHtml = n.unis&&n.unis.length?`<div class="sec-label">Recursos en las universidades</div>${n.unis.map(u=>`<div class="uni-card">
+    <div class="uni-name">${u.name}</div>
+    <div class="uni-lab">${u.lab}</div>
+    <div style="margin-top:4px">${u.res.map(r=>`<span class="resource-chip">${r}</span>`).join('')}</div>
+  </div>`).join('')}`:'';
+  document.getElementById('detail').innerHTML=`<div>
+    <div class="det-title">${n.name.replace('⚠ ','')}</div>
+    <div class="det-sub">${n.source||''}</div>
+    ${!n.isRoot?`<div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
+      <span class="badge ${getBadgeCls(n.lv)}" style="font-size:11px;padding:2px 8px">${li.label}</span>
+      <div class="skill-bar-bg" style="flex:1"><div class="skill-bar-fill" style="width:${li.bar}%;background:${li.fill}"></div></div>
+      <span style="font-size:11px;color:var(--color-text-secondary);min-width:60px">dominio actual</span>
+    </div>`:''}
+    <div class="sec-label">Descripción</div>
+    <div class="det-desc">${n.desc}</div>
+    ${skillsHtml}${enablesHtml}${nextHtml}${gapHtml}${uniHtml}
+  </div>`;
+}
+
+document.getElementById('tree').innerHTML=renderTree(TREE,0);
+setTimeout(()=>{const el=document.querySelector('[onclick*="ia"]');if(el)el.click();},80);
+</script>
