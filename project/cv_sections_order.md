@@ -1,42 +1,34 @@
-# List of updates for the CV
+# Structure et Contenu du CV (Rôle : Ingénieur Généraliste)
 
-## Contact & Identification
-
-- Name: Cristopher Hernandez
-- Location: San Luis Potosi, Mexico
-- Email: cris.main27@gmail.com
-- LinkedIn: [linkedin.com/in/cristopherhdz](https://linkedin.com/in/cristopherhdz)
-- GitHub: [github.com/Cristopher2874](https://github.com/Cristopher2874)
 
 ---
 
-## Professional Profile (Ingénieur Généraliste)
+## 1. En-tête
+
+- **Nom** : Cristopher Hernandez
+- **Localisation** : San Luis Potosi, Mexico
+- **E-mail professionnel** : cris.main27@gmail.com
+- **LinkedIn** : [linkedin.com/in/cristopherhdz](https://linkedin.com/in/cristopherhdz)
+- **GitHub** : [github.com/Cristopher2874](https://github.com/Cristopher2874)
+
+---
+
+## 2. Titre précis
+
+**Candidature au cycle ingénieur (Ingénieur Généraliste) – Double diplôme Écoles Centrales**  
+*Élève-ingénieur en génie mécatronique | Systèmes embarqués, robotique d'assistance & IA*
+
+---
+
+## 3. Phrase d'accroche (2-3 lignes)
 
 Mechatronics engineering student at UASLP (top score on generation admission entrance exam), currently in the application process for the double-degree program with the Écoles Centrales of France. Consistent trajectory in hardware-software integration: mentorship and development of competitive robots in FIRST FRC, mechanical design and additive manufacturing at LEAD 3D, and agentic AI systems engineering at Oracle Innovation Lab.
 
-Professional project: specialize as an embedded systems and control engineer in assistive robotics, integrating perception and artificial intelligence into physical devices to restore autonomy to individuals with reduced mobility.
+**Projet professionnel / Professional project** : Specialize as an embedded systems and control engineer in assistive robotics, integrating perception and artificial intelligence into physical devices to restore autonomy to individuals with reduced mobility.
 
 ---
 
-## Languages
-
-- Spanish: Native
-- English: C1 / Professional (Pearson English certificate level C1 passed with distinction)
-- French: B1 / Active training level A2-B1 (French Language Institute / Instituto de Posiciones de Francés, UASLP Language Center)
-
----
-
-## Technical Skills
-
-- **Programming**: Python, C++, JavaScript/TypeScript, Java, SQL, HTML/CSS, Shell
-- **AI / Agentic Systems**: LangChain, LangGraph, OCI GenAI, OpenAI SDK, AGUI, A2A, MCP protocols, LangFuse, RAG, OpenCV, Ollama, VectorDB, Oracle ADB
-- **Hardware & Mechanics**: Arduino, ESP32, Raspberry Pi, SolidWorks, Fusion 360, PCB design, 3D optical scanning (blue light and infrared Raptor), additive manufacturing and 3D printing (Bambu Lab)
-- **Web & Frameworks**: React, NextJS, FastAPI, Flutter, Tailwind CSS
-- **Infrastructure & DevOps**: Oracle Cloud Infrastructure (OCI), Docker, GitHub, Linux/VM, Nginx, CI/CD pipelines.
-
----
-
-## Education
+## 4. Formation
 
 ### UASLP [2024 – today / Expected Graduation: 2028]
 Universidad Autónoma de San Luis Potosí  
@@ -70,21 +62,40 @@ San Luis Potosi, Mexico
 
 ---
 
-## Chronological Milestones & Competitions
+## 5. Projets scientifiques ou techniques
 
-### 2026
+### 5.1 Projets phares (Featured Projects)
+
+#### FLOW – Smart Water Saving Device [Feb. 2022 – Dec. 2024]
+*Stack*: ESP32, C++, PCB, SolidWorks, Fusion 360
+- Leadership of development of electromechanical and IoT device saving up to 60% of water in showers.
+- Integrated flow sensors, valve actuation, wireless communication, and custom PCB design.
+- Awarded and recognized in Heineken Green Challenge Mexico 2023 (Top 20 national winners).
+
+#### Hackathons 2024 [Oct. 2024 – Nov. 2024]
+*Stack*: Flutter, React, Python, ML
+- **NASA Space Apps Challenge 2024 Xalapa**: Musical generation application developed from James Webb Space Telescope astronomical and spectrographic imagery.
+- **Hackathon Magna UASLP 2024 (Honorable Mention)**: Cross-platform web and mobile application with a machine learning predictive model for employee turnover analysis and retention.
+
+#### ICPC (International Collegiate Programming Contest) [Aug. 2024 – Present]
+*Stack*: C++, Algorithms, Data Structures
+- Third place in faculty 2024; participant in 2024 (last dates), 2025, and 2026 editions [certificate from prof studevs].
+
+### 5.2 Concours, Hackathons et Jalons chronologiques (Milestones & Competitions)
+
+#### 2026
 - Participant of ICPC 2026
 - Fundación Forge volunteer [March 2026] for helping young ones to have their first job
 - Presentation of LangFuse on OCI GenAI workshop Guadalajara (March 2026, 30+ attendees)
 
-### 2025
+#### 2025
 - Participant of ICPC 2025 (did not finish season due to job)
 - Technovation Girls mentor and speaker (teaching programming and application development to a team of two students)
 - Oracle TrailBlazer Intern 2025 (Award for driving adoption of A2A, A2UI, MCP, and LangFuse across the organization)
 - ECEU / IGIU Memorial Hackathon 2025 - FieldSync (Winner at organization level: real-time data synchronization platform for construction sites)
 - Modules used on OCI GenAI workshops in India (December 2025, 30+ attendees)
 
-### 2024
+#### 2024
 - 2024 ICPC participant (only last dates; 3rd place in faculty 2024; August 2024 – present) [certificate from prof studevs]
 - Hackathon Magna 2024 (Honorable Mention: web and mobile platform with machine learning model for employee turnover prediction; Flutter, React, Python, ML)
 - Nasa Space Apps Challenge 2024 Xalapa (Musical generation app based on James Webb Space Telescope astronomical imagery; Flutter, React, Python, ML)
@@ -93,7 +104,7 @@ San Luis Potosi, Mexico
 - First place on entry test of all the students admitted to UASLP 2024
 - Robotics WinterFest 2024 volunteer: organizing hands-on robotics workshops in collaboration with Robotistas
 
-### 2023
+#### 2023
 - LiFe medal to best leadership of the generation 2023
 - Speech on behalf of generation 2023
 - Student development Award 2023
@@ -109,7 +120,7 @@ San Luis Potosi, Mexico
 - Robotics WinterFest 2023 organizer and designer along with mentor team
 - Second pianist on musical presentation Mamma Mia! [campus Tec de Monterrey, November 2023, confirm year]
 
-### 2022
+#### 2022
 - TEDx talk with +300 people (Tec de Monterrey San Luis Potosi, August - October 2022; published on official TEDx website)
 - Second pianist on musical presentation Mamma Mia!
 - Member and Founder of students math group ROOT [Sept. 2021 – Jan. 2023] (teaching competitive math and number theory, winning state awards in Mexican Mathematical Olympiad OMM and Gau55 competition)
@@ -121,37 +132,18 @@ San Luis Potosi, Mexico
 - Participation in chess tournaments [confirm competitions and years, include certificates]
 - Member of Tec de Monterrey robotics team (university level: autonomous vehicles and computer vision projects)
 
-### 2021
+#### 2021
 - OMI 2026 national online contestant / 26th Mexican Olympiad in Informatics 2021 (OMI 26) [include OMI 26 certificate]
 - Programming and electrical team rookie on team 3478 FRC
 
-### Middle School [2018 – 2020]
+#### Middle School [2018 – 2020]
 - 2018: First place in State Expociencias 2018 (direct qualification to international phase)
 - 2019: Expo Sciences International Abu Dhabi 2019, participant
 - 2019: CIENTEC 2019 International Peru 2019, participant
 
 ---
 
-## Featured Projects
-
-### FLOW – Smart Water Saving Device [Feb. 2022 – Dec. 2024]
-*Stack*: ESP32, C++, PCB, SolidWorks, Fusion 360
-- Leadership of development of electromechanical and IoT device saving up to 60% of water in showers.
-- Integrated flow sensors, valve actuation, wireless communication, and custom PCB design.
-- Awarded and recognized in Heineken Green Challenge Mexico 2023 (Top 20 national winners).
-
-### Hackathons 2024 [Oct. 2024 – Nov. 2024]
-*Stack*: Flutter, React, Python, ML
-- **NASA Space Apps Challenge 2024 Xalapa**: Musical generation application developed from James Webb Space Telescope astronomical and spectrographic imagery.
-- **Hackathon Magna UASLP 2024 (Honorable Mention)**: Cross-platform web and mobile application with a machine learning predictive model for employee turnover analysis and retention.
-
-### ICPC (International Collegiate Programming Contest) [Aug. 2024 – Present]
-*Stack*: C++, Algorithms, Data Structures
-- Third place in faculty 2024; participant in 2024 (last dates), 2025, and 2026 editions [certificate from prof studevs].
-
----
-
-## Professional Experience
+## 6. Expériences professionnelles
 
 ### Oracle [2025 – today / Jun. 2025 – Present]
 #### Machine learning engineer intern / AI Engineer at Innovation Lab
@@ -215,7 +207,25 @@ San Luis Potosi, Mexico
 
 ---
 
-## Leadership & Extracurriculars
+## 7. Compétences et langues
+
+### Langues
+- **Spanish**: Native
+- **English**: C1 / Professional (Pearson English certificate level C1 passed with distinction)
+- **French**: B1 / Active training level A2-B1 (French Language Institute / Instituto de Posiciones de Francés, UASLP Language Center)
+
+### Compétences techniques
+- **Programming**: Python, C++, JavaScript/TypeScript, Java, SQL, HTML/CSS, Shell
+- **AI / Agentic Systems**: LangChain, LangGraph, OCI GenAI, OpenAI SDK, AGUI, A2A, MCP protocols, LangFuse, RAG, OpenCV, Ollama, VectorDB, Oracle ADB
+- **Hardware & Mechanics**: Arduino, ESP32, Raspberry Pi, SolidWorks, Fusion 360, PCB design, 3D optical scanning (blue light and infrared Raptor), additive manufacturing and 3D printing (Bambu Lab)
+- **Web & Frameworks**: React, NextJS, FastAPI, Flutter, Tailwind CSS
+- **Infrastructure & DevOps**: Oracle Cloud Infrastructure (OCI), Docker, GitHub, Linux/VM, Nginx, CI/CD pipelines.
+
+---
+
+## 8. Centres d'intérêt
+
+### Activités extra-scolaires, Leadership & Projets communautaires
 
 - **ROOT Mathematics Group [Sept. 2021 – Jan. 2023]**: Founder and leader, teaching competitive mathematics and number theory to high school students; achieved state awards in the Mexican Mathematical Olympiad (OMM) and Gau55 competition.
 - **TEDx Speaker [Aug. 2022 – Oct. 2022]**: Talk before +300 people at Tec de Monterrey San Luis Potosi; published and certified on the official TEDx website.
@@ -229,7 +239,7 @@ San Luis Potosi, Mexico
 
 ---
 
-## Considerations & Document Checklist (Internal / Dossier Preparation)
+## Annexe : Considérations & Checklist des documents (Dossier / Préparation interne)
 
 > [!IMPORTANT]
 > **Priority Official Documents (18/30 Weighting in Evaluation Grid)**
@@ -253,3 +263,19 @@ San Luis Potosi, Mexico
 > **Narrative Coherence (Ingénieur Généraliste - Assistive Robotics & Embedded Systems)**
 > - Maintain visibility of LEAD 3D as it solidifies the hardware-software bridge by linking physical additive manufacturing, 3D optical scanning, and NFC circuits with agentic AI work at Oracle and control robotics at LamBot 3478.
 > - If space requires a more compact version for Campus France, the isolated mention of "Engineering Division Captain" at LamBot can be integrated within the "Technician and Mentor" responsibilities to optimize layout.
+
+---
+
+## Référence historique : Définitions originales de chaque section
+
+Structure initiale de référence :
+> Pour intégrer une école d'ingénieur, votre CV doit tenir sur une seule page et prouver votre rigueur, votre curiosité scientifique et votre potentiel.
+
+- **En-tête** : Vos coordonnées (nom, téléphone, e-mail professionnel) et un lien vers votre profil LinkedIn.
+- **Titre précis** : Indiquez votre objectif, par exemple : « Candidature en 1re année de cycle ingénieur - Spécialité Informatique ».
+- **Phrase d'accroche (2-3 lignes)** : Résumez votre parcours (CPGE, BUT, Licence) et votre motivation pour l'école visée.
+- **Formation** : Vos diplômes par ordre antéchronologique (lycée/bac, classes prépas ou DUT/BUT/Licence), en mentionnant les options ou classements notables.
+- **Projets scientifiques ou techniques** : Détaillez un projet marquant (robotique, programmation, conception 3D) avec les outils utilisés.
+- **Expériences professionnelles** : Stages, jobs d'été ou engagements associatifs en utilisant des verbes d'action et des résultats chiffrés.
+- **Compétences et langues** : Langages de programmation, logiciels de simulation, et niveau d'anglais (ex. score TOEIC).
+- **Centres d'intérêt** : Vos passions ou activités extra-scolaires (sport, musique, associatif) pour montrer votre équilibre et votre esprit d'équipe.
